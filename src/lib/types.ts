@@ -1,3 +1,4 @@
+
 export interface EmailTemplate {
   id: number;
   name: string;
@@ -6,27 +7,58 @@ export interface EmailTemplate {
 }
 
 export interface CaseStudyStat {
-  value: string;
   label: string;
+  value: string;
+}
+
+export interface GaugeData {
+  pct: number;
+  max: number;
+  label: string;
+  fromValue: string;
+}
+
+export interface StrategyData {
+  icon: any;
+  title: string;
+  desc: string;
+}
+
+export interface ResultData {
+  label: string;
+  from: string;
+  to: string;
+  lift: string;
 }
 
 export interface CaseStudy {
   id: number;
   clientName: string;
   title: string;
+  subtitle: string;
+  industry: string;
+  timeline: string;
+  stack: string;
+  lift: string;
   imageUrl: string;
+  creativeUrl: string; // Added for detailed work showcase
   excerpt: string;
   slug: string;
-  clientInfo: string;
+  overview: string;
   challenge: string;
-  solution: string;
-  results: string;
-  stats: CaseStudyStat[];
+  challengeStats: CaseStudyStat[];
+  gauges: GaugeData[];
+  strategies: StrategyData[];
+  results: ResultData[];
+  mandalaPct: number;
+  mandalaLabel: string;
+  mandalaTitle: string;
+  mandalaSub: string;
+  mandalaDesc: string;
   testimonial: {
     quote: string;
     author: string;
   };
-  emailImageUrl: string;
 }
 
 export interface BlogPost {

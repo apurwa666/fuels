@@ -25,13 +25,13 @@
   "caseStudies": [
     {
       "id": 1,
-      "banner": "/images/case-studies/banner-1.png",
+      "banner": "/images/case-studies/BSTC.png",
       "email": "/images/case-studies/email-1.png",
       "hint": "ecommerce store"
     },
     {
       "id": 2,
-      "banner": "/images/case-studies/banner-2.png",
+      "banner": "/images/case-studies/GBA.png",
       "email": "/images/case-studies/email-2.png",
       "hint": "saas dashboard"
     }

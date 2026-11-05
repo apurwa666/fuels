@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, useAnimation, useInView } from 'framer-motion';
-import { Zap, Layout, Clock, BarChart3, TrendingUp, ChevronRight } from 'lucide-react';
-// import { Navbar } from '@/components/layout/navbar';
-// import { Footer } from '@/components/layout/footer';
+import { ChevronRight } from 'lucide-react';
+import { Navbar } from '@/components/layout/navbar';
+import { Footer } from '@/components/layout/footer';
+import { caseStudies } from '@/lib/data';
+import { notFound } from 'next/navigation';
 
 // --- Custom Components for the Case Study ---
 
@@ -63,7 +66,7 @@ const Gauge = ({ pct, max, label, fromValue, delay = 0 }: { pct: number; max: nu
   }, [inView, pct]);
 
   return (
-    <div ref={ref} className="gauge-card reveal">
+    <div ref={ref} className="gauge-card">
       <div className="gauge-wrap">
         <svg viewBox="0 0 120 120">
           <circle className="gauge-track" cx="60" cy="60" r="52"></circle>
@@ -81,12 +84,14 @@ const Gauge = ({ pct, max, label, fromValue, delay = 0 }: { pct: number; max: nu
         </svg>
         <div className="gauge-center">
           <div className="gauge-num">
-            {pct % 1 !== 0 ? count.toFixed(1) : Math.round(count)}%
+            {pct % 1 !== 0 ? count.toFixed(1) : Math.round(count)}
+            {label.includes('Rate') || label.includes('Lift') || label.includes('Recurring') ? '%' : ''}
+            {label.includes('MRR') || label.includes('Revenue') ? '$' : ''}
           </div>
         </div>
       </div>
       <div className="gauge-label">{label}</div>
-      <div className="gauge-before">from <span>{fromValue}</span></div>
+      <div className="gauge-before">baseline <span>{fromValue}</span></div>
     </div>
   );
 };
@@ -115,7 +120,7 @@ const Mandala = ({ pct, label }: { pct: number; label: string }) => {
   }, [inView, pct]);
 
   return (
-    <div ref={ref} className="mandala-wrap reveal">
+    <div ref={ref} className="mandala-wrap">
       <svg viewBox="0 0 180 180">
         <circle className="mandala-ring" cx="90" cy="90" r="86" stroke="rgba(108,124,240,0.2)"></circle>
         <circle className="mandala-ring" cx="90" cy="90" r="70" stroke="rgba(108,124,240,0.2)"></circle>
@@ -139,7 +144,14 @@ const Mandala = ({ pct, label }: { pct: number; label: string }) => {
   );
 };
 
-export default function CaseStudyPage() {
+export default function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const study = caseStudies.find(s => s.slug === slug);
+
+  if (!study) {
+    notFound();
+  }
+
   return (
     <div className="cs-body">
       <style jsx global>{`
@@ -204,11 +216,11 @@ export default function CaseStudyPage() {
         }
 
         .hero {
-          min-height: 100vh;
+          min-height: 70vh;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          padding: 140px 0 100px;
+          padding: 140px 0 60px;
           position: relative;
         }
 
@@ -254,7 +266,7 @@ export default function CaseStudyPage() {
         }
 
         .section {
-          padding: 110px 0;
+          padding: 100px 0;
           position: relative;
         }
 
@@ -471,8 +483,8 @@ export default function CaseStudyPage() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-        {/* HEADER
-        <Navbar /> */}
+      {/* HEADER */}
+      <Navbar />
 
       {/* HERO */}
       <section className="hero">
@@ -492,19 +504,25 @@ export default function CaseStudyPage() {
           <Reveal><div className="eyebrow">Client Case Study · Retention Systems</div></Reveal>
           <Reveal delay={0.1}>
             <div className="flex items-center gap-[16px] my-[32px] text-[16px] text-[var(--text-dim)] font-medium">
-              <span>BSTC Thangka Store</span>
+              <span>{study.clientName}</span>
               <span className="w-px h-4 bg-[var(--line)]"></span>
-              <span>Hand-Painted Tibetan Art</span>
+              <span>{study.subtitle}</span>
             </div>
           </Reveal>
           <Reveal delay={0.2}>
             <h1 className="text-[clamp(40px,6.8vw,80px)] leading-[1.02] mb-[30px] max-w-[920px]">
-              Turning a quiet newsletter into <span className="grad">26% of total revenue</span>
+              {study.title.includes(study.lift) ? (
+                <>
+                   {study.title.split(study.lift)[0]}<span className="grad">{study.lift}</span>{study.title.split(study.lift)[1]}
+                </>
+              ) : (
+                study.title
+              )}
             </h1>
           </Reveal>
           <Reveal delay={0.3}>
             <p className="text-[19px] text-[var(--text-dim)] max-w-[620px] mb-[48px] font-medium leading-relaxed">
-              We rebuilt BSTC's marketing infrastructure from the ground up, combining high-performance design with surgical automation to transform email into their primary growth engine.
+              {study.excerpt}
             </p>
           </Reveal>
 
@@ -512,19 +530,19 @@ export default function CaseStudyPage() {
             <div className="flex flex-wrap gap-[40px] pt-[40px] border-t border-[var(--line)]">
               <div className="meta-item">
                 <div className="k">Industry</div>
-                <div className="v text-[16px] font-bold">DTC · Art & Craft</div>
+                <div className="v text-[16px] font-bold">{study.industry}</div>
               </div>
               <div className="meta-item">
                 <div className="k">Timeline</div>
-                <div className="v text-[16px] font-bold">8 weeks</div>
+                <div className="v text-[16px] font-bold">{study.timeline}</div>
               </div>
               <div className="meta-item">
                 <div className="k">Stack</div>
-                <div className="v text-[16px] font-bold">Shopify + Klaviyo</div>
+                <div className="v text-[16px] font-bold">{study.stack}</div>
               </div>
               <div className="meta-item">
-                <div className="k">Revenue Share</div>
-                <div className="v text-[16px] font-bold text-[var(--accent)]">+189% Lift</div>
+                <div className="k">Impact Lift</div>
+                <div className="v text-[16px] font-bold text-[var(--accent)]">{study.lift}</div>
               </div>
             </div>
           </Reveal>
@@ -538,17 +556,19 @@ export default function CaseStudyPage() {
             <Reveal>
               <div className="col">
                 <h3 className="mono text-[14px] uppercase tracking-[0.1em] text-[var(--accent)] font-bold mb-[18px]">Client Overview</h3>
-                <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">BSTC Thangka Store specializes in authentic, hand-painted Tibetan thangka art. The goal was to scale online revenue through surgical email automation while strictly preserving the brand's spiritual and cultural depth.</p>
+                <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">{study.overview}</p>
               </div>
             </Reveal>
             <Reveal delay={0.1}>
               <div className="col">
                 <h3 className="mono text-[14px] uppercase tracking-[0.1em] text-[var(--accent)] font-bold mb-[18px]">The Challenge</h3>
-                <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">Despite a highly engaged audience, repeat purchases were non-existent and lifecycle automation was missing. Generic broadcasts were the only strategy, resulting in stagnant growth.</p>
+                <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">{study.challenge}</p>
                 <div className="flex gap-[12px] flex-wrap mt-[24px]">
-                  <div className="mono text-[12px] px-4 py-[8px] border border-[var(--line)] rounded-full text-[var(--text-dim)] font-bold">Open rate <b className="text-[var(--accent)]">18%</b></div>
-                  <div className="mono text-[12px] px-4 py-[8px] border border-[var(--line)] rounded-full text-[var(--text-dim)] font-bold">Conversion <b className="text-[var(--accent)]">&lt;1%</b></div>
-                  <div className="mono text-[12px] px-4 py-[8px] border border-[var(--line)] rounded-full text-[var(--text-dim)] font-bold">Flows live <b className="text-[var(--accent)]">0</b></div>
+                  {study.challengeStats.map((stat, i) => (
+                    <div key={i} className="mono text-[12px] px-4 py-[8px] border border-[var(--line)] rounded-full text-[var(--text-dim)] font-bold">
+                      {stat.label} <b className="text-[var(--accent)]">{stat.value}</b>
+                    </div>
+                  ))}
                 </div>
               </div>
             </Reveal>
@@ -563,15 +583,14 @@ export default function CaseStudyPage() {
             <div className="mb-[64px] max-w-[700px]">
               <div className="eyebrow">The Performance Delta</div>
               <h2 className="text-[clamp(32px,4vw,48px)] mt-4 leading-[1.1]">Infrastructure rebuild results in explosive growth.</h2>
-              <p className="text-[var(--text-dim)] text-[18px] mt-6 font-medium">We optimized every core metric by focusing on high-intent behaviors and storytelling-driven design.</p>
+              <p className="text-[var(--text-dim)] text-[18px] mt-6 font-medium">We optimized every core metric by focusing on high-intent behaviors and system-driven execution.</p>
             </div>
           </Reveal>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Gauge pct={41} max={100} label="Email Open Rate" fromValue="18%" />
-            <Gauge pct={7.8} max={15} label="Click-Through Rate" fromValue="2.3%" delay={0.1} />
-            <Gauge pct={3.5} max={6} label="Conversion Rate" fromValue="0.9%" delay={0.2} />
-            <Gauge pct={26} max={40} label="Revenue via Email" fromValue="9%" delay={0.3} />
+            {study.gauges.map((gauge, i) => (
+              <Gauge key={i} pct={gauge.pct} max={gauge.max} label={gauge.label} fromValue={gauge.fromValue} delay={0.1 * i} />
+            ))}
           </div>
 
           <svg width="0" height="0">
@@ -591,37 +610,19 @@ export default function CaseStudyPage() {
           <Reveal>
             <div className="mb-[64px] max-w-[700px]">
               <div className="eyebrow">Strategy & Execution</div>
-              <h2 className="text-[clamp(32px,4vw,48px)] mt-4 leading-[1.1]">Engineered for long-term retention.</h2>
-              <p className="text-[var(--text-dim)] text-[18px] mt-6 font-medium">A systematic approach to building a revenue machine that works 24/7 without manual intervention.</p>
+              <h2 className="text-[clamp(32px,4vw,48px)] mt-4 leading-[1.1]">Engineered for long-term momentum.</h2>
+              <p className="text-[var(--text-dim)] text-[18px] mt-6 font-medium">A systematic approach to building a growth machine that works 24/7 without manual intervention.</p>
             </div>
           </Reveal>
 
-          <div className="strategy-grid reveal">
-            <div className="strategy-card">
-              <div className="strategy-icon"><Layout className="w-6 h-6" /></div>
-              <h4 className="text-xl">Klaviyo Architecture</h4>
-              <p className="text-[15px] font-medium leading-relaxed">Deep integration between Shopify and Klaviyo to capture granular behavioral data for precise targeting.</p>
-            </div>
-            <div className="strategy-card">
-              <div className="strategy-icon"><Zap className="w-6 h-6" /></div>
-              <h4 className="text-xl">Behavioral Automation</h4>
-              <p className="text-[15px] font-medium leading-relaxed">15+ automated flows covering the entire lifecycle: from welcome paths to predictive win-back loops.</p>
-            </div>
-            <div className="strategy-card">
-              <div className="strategy-icon"><Clock className="w-6 h-6" /></div>
-              <h4 className="text-xl">High-Performance Design</h4>
-              <p className="text-[15px] font-medium leading-relaxed">Blending cultural storytelling with conversion-focused layouts to drive intent without sacrificing brand equity.</p>
-            </div>
-            <div className="strategy-card">
-              <div className="strategy-icon"><BarChart3 className="w-6 h-6" /></div>
-              <h4 className="text-xl">Experimentation Cadence</h4>
-              <p className="text-[15px] font-medium leading-relaxed">Continuous A/B testing of offers, timing, and copy to ensure the engine scales with audience health.</p>
-            </div>
-            <div className="strategy-card col-span-1 md:col-span-2">
-              <div className="strategy-icon"><TrendingUp className="w-6 h-6" /></div>
-              <h4 className="text-xl">Revenue Optimization</h4>
-              <p className="text-[15px] font-medium leading-relaxed">Focusing on AOV and lifetime value to squeeze every drop of ROI from existing traffic without increasing ad spend.</p>
-            </div>
+          <div className="strategy-grid">
+            {study.strategies.map((strat, i) => (
+              <div key={i} className="strategy-card">
+                <div className="strategy-icon"><strat.icon className="w-6 h-6" /></div>
+                <h4 className="text-xl">{strat.title}</h4>
+                <p className="text-[15px] font-medium leading-relaxed text-muted-foreground mt-2">{strat.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -637,10 +638,21 @@ export default function CaseStudyPage() {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-[20px]">
-            <Reveal><div className="result-card"><div className="mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-faint)] mb-4 font-bold">Open Rate</div><div className="flex items-baseline gap-[12px]"><span className="mono text-[16px] text-[var(--text-faint)] line-through">18%</span><span className="text-[var(--accent)] font-bold">→</span><span className="result-to">41%</span></div><div className="mt-[16px] text-[13px] text-[var(--text-dim)] font-bold"><b className="text-[#818cf8]">+128%</b> Lift</div></div></Reveal>
-            <Reveal delay={0.1}><div className="result-card"><div className="mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-faint)] mb-4 font-bold">Click-Through Rate</div><div className="flex items-baseline gap-[12px]"><span className="mono text-[16px] text-[var(--text-faint)] line-through">2.3%</span><span className="text-[var(--accent)] font-bold">→</span><span className="result-to">7.8%</span></div><div className="mt-[16px] text-[13px] text-[var(--text-dim)] font-bold"><b className="text-[#818cf8]">+239%</b> Lift</div></div></Reveal>
-            <Reveal delay={0.2}><div className="result-card"><div className="mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-faint)] mb-4 font-bold">Conversion Rate</div><div className="flex items-baseline gap-[12px]"><span className="mono text-[16px] text-[var(--text-faint)] line-through">0.9%</span><span className="text-[var(--accent)] font-bold">→</span><span className="result-to">3.5%</span></div><div className="mt-[16px] text-[13px] text-[var(--text-dim)] font-bold"><b className="text-[#818cf8]">+289%</b> Lift</div></div></Reveal>
-            <Reveal delay={0.3}><div className="result-card"><div className="mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-faint)] mb-4 font-bold">Email Rev Share</div><div className="flex items-baseline gap-[12px]"><span className="mono text-[16px] text-[var(--text-faint)] line-through">9%</span><span className="text-[var(--accent)] font-bold">→</span><span className="result-to">26%</span></div><div className="mt-[16px] text-[13px] text-[var(--text-dim)] font-bold"><b className="text-[#818cf8]">+189%</b> Lift</div></div></Reveal>
+            {study.results.map((res, i) => (
+              <Reveal key={i} delay={0.1 * i}>
+                <div className="result-card">
+                  <div className="mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-faint)] mb-4 font-bold">{res.label}</div>
+                  <div className="flex items-baseline gap-[12px]">
+                    <span className="mono text-[16px] text-[var(--text-faint)] line-through">{res.from}</span>
+                    <span className="text-[var(--accent)] font-bold">→</span>
+                    <span className="result-to">{res.to}</span>
+                  </div>
+                  <div className="mt-[16px] text-[13px] text-[var(--text-dim)] font-bold">
+                    <b className="text-[#818cf8]">{res.lift}</b> Lift
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -648,12 +660,12 @@ export default function CaseStudyPage() {
       {/* REVENUE MANDALA */}
       <section className="section rule">
         <div className="wrap grid grid-cols-1 md:grid-cols-2 gap-[60px] items-center">
-          <Mandala pct={26} label="of total revenue<br>fueled by FuelMails" />
+          <Mandala pct={study.mandalaPct} label={study.mandalaLabel} />
           <Reveal delay={0.1}>
             <div className="revenue-copy">
-              <h3 className="mono text-[14px] uppercase tracking-[0.1em] text-[var(--accent)] mb-[18px] font-bold">Scaling Retention</h3>
-              <h2 className="text-[clamp(28px,3.5vw,36px)] mb-6 leading-tight">Email is now the most profitable lever in the business.</h2>
-              <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">By engineering systems that turn one-time buyers into lifetime collectors, we helped BSTC secure their revenue without relying on volatile ad algorithms. Email went from a footnote to the engine driving 26% of all sales.</p>
+              <h3 className="mono text-[14px] uppercase tracking-[0.1em] text-[var(--accent)] mb-[18px] font-bold">{study.mandalaTitle}</h3>
+              <h2 className="text-[clamp(28px,3.5vw,36px)] mb-6 leading-tight">{study.mandalaSub}</h2>
+              <p className="text-[var(--text-dim)] text-[17px] font-medium leading-relaxed">{study.mandalaDesc}</p>
             </div>
           </Reveal>
         </div>
@@ -666,9 +678,15 @@ export default function CaseStudyPage() {
             <div className="takeaway">
               <span className="text-6xl text-[var(--accent)] opacity-20 font-serif leading-none block mb-4">“</span>
               <p className="quote text-[clamp(22px,3vw,32px)] font-bold leading-[1.3] text-white italic">
-                FuelMails didn't just build our emails; they built a <span className="grad">retention machine</span> that understands our customers as deeply as we do. Our growth is now predictable and profitable.
+                {study.testimonial.quote.includes(study.lift) ? (
+                  <>
+                    {study.testimonial.quote.split(study.lift)[0]}<span className="grad">{study.lift}</span>{study.testimonial.quote.split(study.lift)[1]}
+                  </>
+                ) : (
+                  study.testimonial.quote
+                )}
               </p>
-              <p className="text-[var(--text-dim)] mt-8 font-bold text-sm uppercase tracking-widest">— Marketing Director, BSTC</p>
+              <p className="text-[var(--text-dim)] mt-8 font-bold text-sm uppercase tracking-widest">— {study.testimonial.author}</p>
             </div>
           </Reveal>
         </div>
@@ -688,8 +706,7 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      {/* <Footer /> */}
+      
     </div>
   );
 }
