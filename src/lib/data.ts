@@ -1,4 +1,3 @@
-
 import type { EmailTemplate, CaseStudy, BlogPost, Testimonial, FaqItem, TeamMember, NavLink } from './types';
 import { 
   CalendarCheck, 
@@ -157,10 +156,10 @@ export const caseStudies: CaseStudy[] = [
       { pct: 26, max: 40, label: 'Revenue via Email', fromValue: '9%' }
     ],
     strategies: [
-      { icon: Layout, title: 'Klaviyo Architecture', desc: 'Deep integration between Shopify and Klaviyo to capture granular behavioral data for precise targeting.' },
-      { icon: Zap, title: 'Behavioral Automation', desc: '15+ automated flows covering the entire lifecycle: from welcome paths to predictive win-back loops.' },
-      { icon: Clock, title: 'High-Performance Design', desc: 'Blending cultural storytelling with conversion-focused layouts to drive intent without sacrificing brand equity.' },
-      { icon: BarChart3, title: 'Experimentation Cadence', desc: 'Continuous A/B testing of offers, timing, and copy to ensure the engine scales with audience health.' }
+      { iconName: 'Layout', title: 'Klaviyo Architecture', desc: 'Deep integration between Shopify and Klaviyo to capture granular behavioral data for precise targeting.' },
+      { iconName: 'Zap', title: 'Behavioral Automation', desc: '15+ automated flows covering the entire lifecycle: from welcome paths to predictive win-back loops.' },
+      { iconName: 'Clock', title: 'High-Performance Design', desc: 'Blending cultural storytelling with conversion-focused layouts to drive intent without sacrificing brand equity.' },
+      { iconName: 'BarChart3', title: 'Experimentation Cadence', desc: 'Continuous A/B testing of offers, timing, and copy to ensure the engine scales with audience health.' }
     ],
     results: [
       { label: 'Open Rate', from: '18%', to: '41%', lift: '+128%' },
@@ -205,10 +204,10 @@ export const caseStudies: CaseStudy[] = [
       { pct: 13, max: 20, label: 'New Partners Secured', fromValue: '0' }
     ],
     strategies: [
-      { icon: Target, title: 'Lead Sourcing', desc: 'Sourced 5,000+ individual donors and 600+ institutional partners from scratch.' },
-      { icon: Users, title: 'Multi-Channel Nurture', desc: 'Ran email and LinkedIn as complementary channels, reinforcing each other on the same contacts.' },
-      { icon: Workflow, title: 'Grant Funnel', desc: 'Built a tracker for grant opportunities by deadline, rolling, and closed status for structured visibility.' },
-      { icon: Zap, title: 'KOL Relationship', desc: 'Used targeted rapport building with key opinion leaders to build long-term institutional authority.' }
+      { iconName: 'Target', title: 'Lead Sourcing', desc: 'Sourced 5,000+ individual donors and 600+ institutional partners from scratch.' },
+      { iconName: 'Users', title: 'Multi-Channel Nurture', desc: 'Ran email and LinkedIn as complementary channels, reinforcing each other on the same contacts.' },
+      { iconName: 'Workflow', title: 'Grant Funnel', desc: 'Built a tracker for grant opportunities by deadline, rolling, and closed status for structured visibility.' },
+      { iconName: 'Zap', title: 'KOL Relationship', desc: 'Used targeted rapport building with key opinion leaders to build long-term institutional authority.' }
     ],
     results: [
       { label: 'Prospects Built', from: '0', to: '5,600+', lift: '+∞' },

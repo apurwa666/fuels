@@ -1,4 +1,3 @@
-
 export interface EmailTemplate {
   id: number;
   name: string;
@@ -19,7 +18,7 @@ export interface GaugeData {
 }
 
 export interface StrategyData {
-  icon: any;
+  iconName: string;
   title: string;
   desc: string;
 }
