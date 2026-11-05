@@ -712,7 +712,7 @@ export function CaseStudyUI({ study }: { study: CaseStudy }) {
       </section>
 
       {/* FOOTER */}
-      <Footer />
+      
     </div>
   );
 }
