@@ -106,7 +106,7 @@ export function Footer() {
                 <Link href="https://www.instagram.com/fuelmails/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                   <Instagram className="h-4 w-4 hover:text-primary transition-colors" />
                 </Link>
-                <Link href="https://www.linkedin.com/in/pantha-anish/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <Link href="https://www.linkedin.com/company/fuel-mails//" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                   <Linkedin className="h-4 w-4 hover:text-primary transition-colors" />
                 </Link>
               </div>
