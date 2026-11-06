@@ -37,7 +37,7 @@ export default function CaseStudiesPage() {
                     data-ai-hint="case study cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute top-6 left-6 flex flex-wrap gap-2">
+                  <div className="absolute top-4 left-6 flex flex-wrap gap-2">
                     <Badge variant="secondary" className="bg-accent/20 backdrop-blur-md border-accent/30 text-accent font-bold">
                       {study.industry}
                     </Badge>
