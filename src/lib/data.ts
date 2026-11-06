@@ -116,7 +116,7 @@ export const growthServices = [
 
 export const teamMembers: TeamMember[] = placeholders.team.map(member => ({
   name: member.name,
-  title: 'Co-Founder & CEO',
+  title: 'Co-Founder',
   imageUrl: member.url,
   dataAiHint: member.hint,
 }));
